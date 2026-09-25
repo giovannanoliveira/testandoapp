@@ -1,0 +1,19 @@
+kind = "design-system"
+previewPath = "/vizinhanca-real-design-system/"
+title = "Vizinhança Real Design System"
+description = "Sistema visual do Vizinhança Real para experiências mobile acolhedoras e confiáveis, com paleta residencial quente, tipografia Poppins e componentes acessíveis."
+version = "1.0.0"
+id = "artifacts/vizinhanca-real-design-system"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/vizinhanca-real-design-system/" ]
+localPort = 23769
+
+[services.development]
+run = "pnpm --filter @workspace/vizinhanca-real-design-system run dev"
+
+[services.env]
+PORT = "23769"
+BASE_PATH = "/vizinhanca-real-design-system/"

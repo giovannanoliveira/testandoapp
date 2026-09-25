@@ -1,0 +1,14 @@
+# Vizinhança Real
+
+> Vizinhança Real reúne avaliações reais de apartamento, condomínio, proprietário e imobiliária feitas por quem já morou no imóvel. O objetivo é mostrar como é morar ali de fato antes de alguém assinar um contrato de aluguel — coisas como infiltração, elevador quebrado, internet ruim ou demora do proprietário para resolver problemas, que normalmente só aparecem depois da mudança.
+
+Cada avaliação cobre 4 categorias (apartamento, condomínio, proprietário, imobiliária) com nota de 1 a 5 e comentário, além de uma resposta obrigatória para "o que eu gostaria de saber antes de alugar?". O produto é focado em aluguel residencial no Brasil; não intermedia contratos nem cobra comissão de imobiliária.
+
+## Páginas
+
+- [Vizinhança Real](https://vizinhancareal.example.com/): entrada do app — login/cadastro e, após autenticação, busca de imóveis por endereço ou condomínio e leitura/publicação de avaliações.
+
+## Observações
+
+- A maior parte do conteúdo (busca, ficha de imóvel, avaliações) exige login e não está disponível para crawlers não autenticados nesta versão.
+- Domínio de produção ainda não definido; substituir `vizinhancareal.example.com` pela URL final quando o deploy estiver publicado.
