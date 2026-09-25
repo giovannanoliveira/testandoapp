@@ -39,6 +39,11 @@ async function seedPremiumProduct() {
   console.log(`Plano Premium pronto: produto ${product.id}, preço ${price.id}`);
 }
 
+if (!process.env.STRIPE_SECRET_KEY) {
+  console.log("STRIPE_SECRET_KEY não configurada: pulando criação do Plano Premium");
+  process.exit(0);
+}
+
 seedPremiumProduct().catch((error) => {
   console.error(error);
   process.exit(1);

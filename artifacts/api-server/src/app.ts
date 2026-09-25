@@ -16,6 +16,8 @@ import {
 } from "./middlewares/clerkProxyMiddleware";
 
 const app: Express = express();
+// Behind a hosting proxy (Render, Railway...), trust X-Forwarded-* for https URLs.
+app.set("trust proxy", true);
 
 app.use(
   pinoHttp({

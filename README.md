@@ -71,7 +71,26 @@ Fluxo: o app chama `POST /api/stripe/checkout` → abre o Checkout da Stripe →
 A página de retorno do pagamento e o `GET /api/stripe/status` também confirmam o pagamento direto na Stripe, então o Premium é ativado mesmo se o webhook atrasar.
 Nenhuma chave da Stripe vai para o app.
 
-## Deploy (um único serviço)
+## Publicar no Render (recomendado)
+
+O arquivo `render.yaml` cria sozinho o banco Postgres e o serviço web (API + app).
+
+1. Em render.com, crie uma conta e conecte seu GitHub.
+2. Clique em **New → Blueprint** e escolha o repositório `testandoapp`.
+3. Preencha as chaves que o Render pedir: Clerk (a chave pública vai em duas variáveis) e Stripe.
+   `STRIPE_WEBHOOK_SECRET` pode ficar vazio por enquanto.
+4. Clique em **Apply**. Após o build, o app fica em `https://vizinhanca-real.onrender.com` (ou endereço parecido).
+5. Depois de publicado:
+   - **Stripe → Developers → Webhooks → Add endpoint**: `https://SEU-APP.onrender.com/api/stripe/webhook`,
+     eventos `checkout.session.completed` e `checkout.session.async_payment_succeeded`.
+     Copie o `whsec_...` para `STRIPE_WEBHOOK_SECRET` no Render.
+   - **Clerk → Domains/Paths**: adicione o endereço do app às URLs permitidas.
+
+Observações do plano grátis: o serviço "dorme" após 15 min sem uso (a primeira visita demora ~1 min)
+e o banco Postgres grátis do Render expira em 30 dias. Para dados permanentes, use o Supabase:
+troque `DATABASE_URL` no Render pela URL do Supabase (com `?sslmode=require&uselibpqcompat=true`).
+
+## Deploy manual em outro provedor
 
 ```bash
 pnpm install

@@ -76,7 +76,9 @@ async function activatePremiumFromSession(
 }
 
 function getPublicApiUrl(req: Request) {
-  const configured = process.env.PUBLIC_API_URL?.trim();
+  // RENDER_EXTERNAL_URL is set automatically on Render.
+  const configured =
+    process.env.PUBLIC_API_URL?.trim() || process.env.RENDER_EXTERNAL_URL?.trim();
   if (configured) return configured.replace(/\/+$/, "");
   const host = req.get("host");
   if (!host) throw new Error("Domínio público da API não disponível");
@@ -168,7 +170,8 @@ router.get("/stripe/checkout/result", async (req, res): Promise<void> => {
   }
 
   const query = `checkout=${paid ? "success" : "cancelled"}`;
-  const appUrl = process.env.APP_URL?.trim().replace(/\/+$/, "");
+  const appUrl = (process.env.APP_URL?.trim() || process.env.RENDER_EXTERNAL_URL?.trim())
+    ?.replace(/\/+$/, "");
   const backLink = appUrl ? `${appUrl}/planos?${query}` : `mobile:///planos?${query}`;
   res
     .status(200)
