@@ -77,7 +77,8 @@ O arquivo `render.yaml` cria sozinho o banco Postgres e o serviço web (API + ap
 
 1. Em render.com, crie uma conta e conecte seu GitHub.
 2. Clique em **New → Blueprint** e escolha o repositório `testandoapp`.
-3. Preencha as chaves que o Render pedir: Clerk (a chave pública vai em duas variáveis) e Stripe.
+3. Preencha as chaves que o Render pedir: `CLERK_SECRET_KEY` e `STRIPE_SECRET_KEY`
+   (a chave pública do Clerk já está no `render.yaml`).
    `STRIPE_WEBHOOK_SECRET` pode ficar vazio por enquanto.
 4. Clique em **Apply**. Após o build, o app fica em `https://vizinhanca-real.onrender.com` (ou endereço parecido).
 5. Depois de publicado:

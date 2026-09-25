@@ -23,13 +23,14 @@ services:
         fromDatabase:
           name: vizinhanca-db
           property: connectionString
-      # Clerk (dashboard.clerk.com → API Keys). A chave pública vai em duas variáveis.
+      # Clerk (dashboard.clerk.com → API Keys). A chave pública pode ficar no código;
+      # a secreta (sk_...) é colada só no painel do Render.
       - key: CLERK_SECRET_KEY
         sync: false
       - key: CLERK_PUBLISHABLE_KEY
-        sync: false
+        value: pk_test_aW50ZWdyYWwtZ3JpZmZvbi0zMjYxLmNsZXJrLmFjY291bnRzLmRldiQ
       - key: EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY
-        sync: false
+        value: pk_test_aW50ZWdyYWwtZ3JpZmZvbi0zMjYxLmNsZXJrLmFjY291bnRzLmRldiQ
       # Stripe (dashboard.stripe.com → Developers → API keys / Webhooks)
       - key: STRIPE_SECRET_KEY
         sync: false
