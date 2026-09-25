@@ -14,6 +14,10 @@ declare global {
   }
 }
 
+export function isClerkConfigured(): boolean {
+  return Boolean(process.env.CLERK_SECRET_KEY);
+}
+
 export function extractToken(req: Request): string | null {
   const header = req.headers.authorization;
   if (!header || !header.startsWith("Bearer ")) return null;
@@ -39,8 +43,8 @@ export async function requireAuth(
   res: Response,
   next: NextFunction,
 ): Promise<void> {
-  const clerkAuth = getAuth(req);
-  if (clerkAuth.userId) {
+  const clerkAuth = isClerkConfigured() ? getAuth(req) : null;
+  if (clerkAuth?.userId) {
     let [user] = await db
       .select()
       .from(usuariosTable)

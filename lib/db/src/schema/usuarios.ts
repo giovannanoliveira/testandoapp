@@ -8,6 +8,8 @@ export const usuariosTable = pgTable("usuarios", {
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
   passwordHash: text("password_hash").notNull(),
+  stripeCustomerId: text("stripe_customer_id").unique(),
+  premiumAt: timestamp("premium_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),

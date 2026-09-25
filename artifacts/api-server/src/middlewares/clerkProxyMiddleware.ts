@@ -7,10 +7,10 @@
  *
  * AUTH CONFIGURATION: To manage users, enable/disable login providers
  * (Google, GitHub, etc.), change app branding, or configure OAuth credentials,
- * use the Auth pane in the workspace toolbar. There is no external Clerk
- * dashboard — all auth configuration is done through the Auth pane.
+ * use the Clerk dashboard (https://dashboard.clerk.com).
  *
  * IMPORTANT:
+ * - Opt-in: only active when CLERK_USE_PROXY=true (Clerk "proxy" deployments)
  * - Only active in production (Clerk proxying doesn't work for dev instances)
  * - Must be mounted BEFORE express.json() middleware
  *
@@ -54,7 +54,10 @@ export function getClerkProxyHost(req: {
 
 export function clerkProxyMiddleware(): RequestHandler {
   // Only run proxy in production — Clerk proxying doesn't work for dev instances
-  if (process.env.NODE_ENV !== 'production') {
+  if (
+    process.env.NODE_ENV !== 'production' ||
+    process.env.CLERK_USE_PROXY !== 'true'
+  ) {
     return (_req, _res, next) => next();
   }
 

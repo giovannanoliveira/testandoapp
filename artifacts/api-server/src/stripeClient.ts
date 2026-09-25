@@ -1,20 +1,16 @@
-import { ReplitConnectors } from "@replit/connectors-sdk";
+import Stripe from "stripe";
 
-export async function stripeRequest<T>(
-  path: string,
-  options?: { method?: string; headers?: Record<string, string>; body?: string },
-): Promise<T> {
-  const connectors = new ReplitConnectors();
-  const response = await connectors.proxy("stripe", path, options);
-  const text = await response.text();
-  const data = text ? (JSON.parse(text) as unknown) : {};
+let client: Stripe | null = null;
 
-  if (!response.ok) {
-    const errorData = data as { error?: { message?: string } };
-    throw new Error(
-      errorData.error?.message ?? `Stripe respondeu com status ${response.status}`,
-    );
+export function isStripeConfigured(): boolean {
+  return Boolean(process.env.STRIPE_SECRET_KEY);
+}
+
+export function getStripe(): Stripe {
+  const secretKey = process.env.STRIPE_SECRET_KEY;
+  if (!secretKey) {
+    throw new Error("STRIPE_SECRET_KEY não configurada");
   }
-
-  return data as T;
+  client ??= new Stripe(secretKey);
+  return client;
 }

@@ -21,7 +21,12 @@ import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 import { FavoritesProvider } from '@/contexts/FavoritesContext';
 import { useColors } from '@/hooks/useColors';
 
-setBaseUrl(`https://${process.env.EXPO_PUBLIC_DOMAIN}`);
+// EXPO_PUBLIC_API_URL points at the API server (e.g. http://localhost:5000).
+// When empty on web, requests go to the same origin that serves the app.
+const apiUrl =
+  process.env.EXPO_PUBLIC_API_URL ||
+  (process.env.EXPO_PUBLIC_DOMAIN ? `https://${process.env.EXPO_PUBLIC_DOMAIN}` : null);
+setBaseUrl(apiUrl);
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
 const proxyUrl = process.env.EXPO_PUBLIC_CLERK_PROXY_URL || undefined;
 
