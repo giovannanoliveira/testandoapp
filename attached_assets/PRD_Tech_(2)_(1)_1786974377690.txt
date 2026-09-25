@@ -1,0 +1,115 @@
+﻿# PRD — Vizinhança Real · v1
+
+**Equipe:** Maria Fernanda Costa, Pedro Rangel, Giovanna Niel
+**Data:** 10/08/2026
+
+## 1. Header
+
+| Campo | Valor |
+|---|---|
+| Time | Maria Fernanda Costa, Pedro Rangel, Giovanna Niel |
+| Última atualização | 10/08/2026 |
+| Design / telas | ainda não existe |
+| Repositório | ainda não existe |
+
+## 2. Problem
+
+**Quem é o cliente?** Pessoas alugando um imóvel pela primeira vez ou se mudando de cidade — universitários, jovens no primeiro apartamento, casais buscando o primeiro imóvel juntos e quem troca de aluguel com frequência.
+
+**Qual é o problema?** O anúncio de aluguel mostra fotos, metragem e preço, mas não mostra como é morar ali de fato. Infiltração, elevador quebrado, internet ruim, proprietário lento para resolver problema — tudo isso só aparece depois que o contrato já foi assinado, quando trocar de imóvel custa tempo, dinheiro e uma nova mudança.
+
+**Como sabemos que isso é um problema?** SEM EVIDÊNCIA PRIMÁRIA (nenhuma entrevista feita ainda). Evidência secundária de mercado: a QuintoAndar, maior imobiliária digital do país, acumula 17.924 reclamações no Reclame Aqui (nota 7,5/10); reportagens do setor apontam demora em reparos, retenção de caução e falta de transparência como queixas recorrentes de inquilinos; conteúdo jurídico trata como comum o inquilino descobrir "vícios ocultos" — defeitos estruturais — só após assinar o contrato. Recomendação: validar com 3-5 entrevistas reais antes da v2.
+
+**Como resolvem hoje?** Perguntam a amigos, pesquisam no Google e em grupos de WhatsApp, tentam achar reclamações da imobiliária (que avaliam a empresa, não o imóvel específico), ou perguntam ao corretor — que tem interesse em alugar, não em expor problemas.
+
+## 3. Goals
+
+**Métrica de output:** nº de buscas de endereço/condomínio que retornam pelo menos 1 avaliação real publicada, por semana.
+
+**Métricas de input:**
+- nº de avaliações completas cadastradas por semana
+- nº de condomínios/imóveis únicos com pelo menos 1 avaliação
+- taxa de conversão de "leu uma avaliação" → "cadastrou a própria avaliação"
+
+**Non-goals / Won't nesta versão** (fica de fora agora, mas está escrito aqui)
+- Não vamos intermediar contratos de aluguel nem cobrar comissão de imobiliária.
+- Não vamos verificar juridicamente a veracidade de cada avaliação (moderação é manual e simples).
+- Não vamos cobrir imóveis à venda, só aluguel residencial.
+- Não vamos ter app nativo iOS/Android nesta versão — só web.
+
+**Guardrails**
+- Nenhuma avaliação pode ser publicada sem confirmação de que o autor selecionou pelo menos uma categoria (apartamento, condomínio, proprietário ou imobiliária).
+- Resultado da busca aparece em até 2 segundos em conexão 4G; acima disso, mostrar esqueleto de carregamento em vez de tela em branco (COULD — melhora a experiência, primeiro item a cortar se faltar tempo).
+
+## 4. Solution
+
+### Milestone 1 — Buscar e avaliar
+
+| Prioridade | User story | Por quê essa prioridade |
+|---|---|---|
+| **MUST** | Como futuro morador, quero digitar parte do nome do endereço ou condomínio e ver a lista filtrar em tempo real; sem resultado, mostrar os 3 condomínios com nome mais parecido. | Sem isso não há produto. |
+| **MUST** | Como ex-morador, quero dar uma nota de 1 a 5 em cada uma das 4 categorias (apartamento, condomínio, proprietário, imobiliária) e escrever um comentário de até 500 caracteres em pelo menos uma delas. | Sem isso não há conteúdo pra entregar. |
+| **MUST** | Como usuário, quero responder "o que eu gostaria de saber antes de alugar?" em um campo de texto livre com no mínimo 20 caracteres. | Deixa o alerta específico em vez de vazio ou genérico. |
+| **SHOULD** | Como usuário, quero tocar em um filtro (ex.: "só condomínio") e ver a lista de avaliações atualizar sem recarregar a página. | Importante, mas o produto funciona sem. |
+
+### Milestone 2 — Confiança na informação
+
+| Prioridade | User story | Por quê essa prioridade |
+|---|---|---|
+| **SHOULD** | Como usuário, quero ver "há X meses" ao lado de cada avaliação e um aviso quando passar de 18 meses. | Importante para saber se a informação ainda é válida, mas o produto funciona sem. |
+| **COULD** | Como usuário, quero denunciar uma avaliação; ao acumular 3 denúncias de contas diferentes, ela some da lista pública até revisão manual em até 48h. | Melhora a experiência, é o primeiro item a cortar se faltar tempo. |
+
+### Stack
+
+| Item | Escolha |
+|---|---|
+| Linguagem | TypeScript |
+| Framework | React + Vite |
+| Banco | PostgreSQL via Supabase |
+| Por quê | É o stack que já domino em produção (Rally, HPE Cubagem), reduz risco de atraso até o Demo Day. |
+
+### Dados (rascunho)
+- `imovel` — `endereco`, `condominio`, `cidade`
+- `avaliacao` — `imovel_id`, `categoria` (apartamento/condominio/proprietario/imobiliaria), `nota`, `comentario`, `o_que_eu_gostaria_de_saber`, `data`
+- `usuario` — `nome`, `email`
+
+### Tópicos em aberto
+Como evitar avaliação falsa de proprietário concorrente sem exigir comprovante de moradia (que esbarraria em privacidade)?
+
+## 5. Launch plan
+
+| Item | Definição |
+|---|---|
+| Rollout | Teste com um grupo pequeno (amigos que já alugaram em São Paulo) |
+| Critério de sucesso | Pelo menos 10 imóveis com avaliação real publicada |
+| No ar até o Demo Day (08/10) | Busca por endereço + cadastro de avaliação (Milestone 1 completo) |
+
+## 6. Meeting Notes
+
+**10/08 — Definição inicial**
+- Decidido: escopo v1 é só aluguel residencial, web, sem intermediação de contrato.
+- Em aberto: validar o problema com entrevistas reais antes da revisão de pares.
+
+**10/08 — Mapeamento de concorrentes**
+- Decidido: nenhum concorrente direto cobre as 5 dimensões (imóvel, condomínio, proprietário, imobiliária, experiência de moradia) ao mesmo tempo — ver Appendix.
+
+## 7. Appendix
+
+**Evidência de mercado**
+- QuintoAndar no Reclame Aqui (17.924 reclamações) — reclameaqui.com.br/empresa/quinto-andar
+- Reportagem sobre queixas de inquilinos e imobiliárias — lucamoreira.com.br
+- Artigo sobre vícios ocultos em imóveis alugados — jusbrasil.com.br
+
+**Matriz competitiva**
+
+| Concorrente | Avalia imóvel | Avalia condomínio | Avalia proprietário | Avalia imobiliária | Experiência de moradia |
+|---|---|---|---|---|---|
+| QuintoAndar | Parcial | Não | Parcial | Sim | Parcial |
+| Airbnb | Sim | — | Sim | — | Sim |
+| Google Maps | Parcial | Parcial | Não | Sim | Não |
+| Reclame Aqui | Não | Não | Não | Sim | Não |
+| WhatsApp/Reddit | Sim | Sim | Sim | Sim | Sim |
+| **Vizinhança Real** | **Sim** | **Sim** | **Sim** | **Sim** | **Sim** |
+
+Nenhum concorrente direto cobre as 5 dimensões ao mesmo tempo. QuintoAndar intermedia o aluguel mas não constrói reputação independente; Airbnb é a referência de modelo de avaliação, mas não existe para aluguel de longo prazo; Google Maps e Reclame Aqui não são estruturados para decisão de moradia; grupos de WhatsApp/Reddit já resolvem o problema, só que de forma manual e espalhada — é o concorrente indireto mais forte. O corretor/imobiliária também é concorrente, por conflito de interesse: quer fechar a locação, não expor problemas.
+
